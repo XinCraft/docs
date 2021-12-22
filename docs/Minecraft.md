@@ -85,3 +85,36 @@ Get player statistics using an uuid. Only supports undashed UUIDs.
     "favoritemaps": []
   }
 ```
+### Examples
+#### Python
+```py
+import aiohttp
+import asyncio
+import json
+
+
+async def req(username):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(
+                url=f"https://api.mojang.com/users/profiles/minecraft/{username}"
+        ) as data:
+            return await data.json()
+
+
+async def req2(uuid, key):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(
+                url=f"https://xincraft.net/api/v1/player/uuid/{uuid}",
+                headers={
+                    "xincraft-api": key
+                }
+        ) as data:
+            jsonData = await data.json()
+            return json.dumps(jsonData, sort_keys=True, indent=4)
+
+
+data = asyncio.run(req("ThatHolyNon"))
+d = asyncio.run(req2(data["id"], "my-api-key"))  # replace my-api-key with your api key
+print(d)
+
+```
